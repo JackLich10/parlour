@@ -25,7 +25,7 @@ flavors <- html %>%
   stringr::str_squish()
 
 ### TO TEST
-flavors <- c(flavors, "Salty Malty Cookie Gravel")
+# flavors <- c(flavors, "Salty Malty Cookie Gravel")
 
 # Detect if my favorite flavor is on the menu
 salty_malty <- any(stringr::str_detect(flavors, "(S|s)alty (M|m)alty (C|c)"))
