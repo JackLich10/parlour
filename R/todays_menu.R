@@ -79,12 +79,12 @@ if (isTRUE(salty_malty)) {
     body = message
   )
 
-  # # Send message to friend
-  # twilio::tw_send_message(
-  #   to = Sys.getenv("friend_number"),
-  #   from = Sys.getenv("from_number"),
-  #   body = message
-  # )
+  # Send message to friend
+  twilio::tw_send_message(
+    to = Sys.getenv("friend_number"),
+    from = Sys.getenv("from_number"),
+    body = message
+  )
 }
 
 cat("Completed The Parlour daily menu scrape.\n")
