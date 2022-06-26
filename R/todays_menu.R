@@ -11,8 +11,12 @@ suppressMessages(suppressWarnings(library(stringr)))
 # Link to daily menu
 link <- "https://theparlour.co/menu/"
 
+cat("Reading The Parlour's menu HTML...\n")
+
 # Read page html
 html <- rvest::read_html(link)
+
+cat("Finding The Parlour's current flavors...\n")
 
 # Extract the current flavor offerings
 flavors <- html %>%
@@ -24,7 +28,13 @@ flavors <- html %>%
 # flavors <- c(flavors, "Salty Malty Cookie Gravel")
 
 # Detect if my favorite flavor is on the menu
-salty_malty <- any(stringr::str_detect(flavors, "(S|s)alty (M|m)alty (C|c)ookie"))
+salty_malty <- any(stringr::str_detect(flavors, "(S|s)alty (M|m)alty (C|c)"))
+
+if (isTRUE(salty_malty)) {
+  cat("The Parlour has a Salty Malty flavor!\n")
+} else {
+  cat("The Parlour does not have a Salty Malty flavor :(\n")
+}
 
 # Put into a tibble
 offerings <- dplyr::tibble(flavor = flavors,
@@ -32,6 +42,8 @@ offerings <- dplyr::tibble(flavor = flavors,
                            hour = lubridate::hour(date),
                            minute = lubridate::minute(date)) %>%
   dplyr::mutate(date = Sys.Date())
+
+cat("Writing a .csv of the current flavors...\n")
 
 # Path to write to
 path <- paste0("data/flavors_", Sys.Date(), ".csv")
@@ -49,6 +61,9 @@ if ("try-error" %in% class(prev_offerings)) {
 
 # Send a text if my favorite flavor is offered
 if (isTRUE(salty_malty)) {
+
+  cat("Sending a text message notification for the Salty Malty flavor!\n")
+
   # Load in `twilio` library
   suppressMessages(suppressWarnings(library(twilio)))
 
@@ -72,4 +87,4 @@ if (isTRUE(salty_malty)) {
   )
 }
 
-
+cat("Completed The Parlour daily menu scrape.\n")
