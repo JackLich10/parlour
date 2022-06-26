@@ -25,7 +25,7 @@ flavors <- html %>%
   stringr::str_squish()
 
 ### TO TEST
-# flavors <- c(flavors, "Salty Malty Cookie Gravel")
+flavors <- c(flavors, "Salty Malty Cookie Gravel")
 
 # Detect if my favorite flavor is on the menu
 salty_malty <- any(stringr::str_detect(flavors, "(S|s)alty (M|m)alty (C|c)"))
@@ -79,12 +79,12 @@ if (isTRUE(salty_malty)) {
     body = message
   )
 
-  # Send message to friend
-  twilio::tw_send_message(
-    to = Sys.getenv("friend_number"),
-    from = Sys.getenv("from_number"),
-    body = message
-  )
+  # # Send message to friend
+  # twilio::tw_send_message(
+  #   to = Sys.getenv("friend_number"),
+  #   from = Sys.getenv("from_number"),
+  #   body = message
+  # )
 }
 
 cat("Completed The Parlour daily menu scrape.\n")
