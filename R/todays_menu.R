@@ -47,9 +47,11 @@ cat("Writing a .csv of the current flavors...\n")
 
 # Path to write to
 path <- paste0("data/flavors_", Sys.Date(), ".csv")
+yesterday_path <- paste0("data/flavors_", Sys.Date()-1, ".csv")
 
 # Read in previously scraped flavors of the day if possible
 prev_offerings <- try(readr::read_csv(path, col_types = readr::cols()), silent = TRUE)
+yesterday_offerings <- try(readr::read_csv(yesterday_path, col_types = readr::cols()), silent = TRUE)
 
 # Write data to .csv
 if ("try-error" %in% class(prev_offerings)) {
@@ -85,6 +87,38 @@ if (isTRUE(salty_malty)) {
     from = Sys.getenv("from_number"),
     body = message
   )
+}
+
+if (!"try-error" %in% class(yesterday_offerings)) {
+  # Find any new flavors
+  new_flavors <- setdiff(offerings$flavor, yesterday_offerings$flavor)
+
+  # Send a text for new flavors
+  if (length(new_flavors) > 0) {
+
+    cat("Sending a text message notification for new flavors!\n")
+
+    # Load in `twilio` library
+    suppressMessages(suppressWarnings(library(twilio)))
+
+    # Construct text message
+    message <- paste0("Durham's The Parlour has new flavors today:\n",
+                      paste0(new_flavors, collapse = ", "))
+
+    # Send message to me
+    twilio::tw_send_message(
+      to = Sys.getenv("my_number"),
+      from = Sys.getenv("from_number"),
+      body = message
+    )
+
+    # Send message to friend
+    twilio::tw_send_message(
+      to = Sys.getenv("friend_number"),
+      from = Sys.getenv("from_number"),
+      body = message
+    )
+  }
 }
 
 cat("Completed The Parlour daily menu scrape.\n")
