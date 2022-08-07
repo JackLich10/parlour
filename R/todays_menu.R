@@ -24,6 +24,12 @@ flavors <- html %>%
   rvest::html_text() %>%
   stringr::str_squish()
 
+# Extract the current flavor descriptions
+descriptions <- html %>%
+  rvest::html_elements(".flavor-description") %>%
+  rvest::html_text() %>%
+  stringr::str_squish()
+
 ### TO TEST
 # flavors <- c(flavors, "Salty Malty Cookie Gravel")
 
@@ -38,6 +44,7 @@ if (isTRUE(salty_malty)) {
 
 # Put into a tibble
 offerings <- dplyr::tibble(flavor = flavors,
+                           description = descriptions,
                            date = Sys.time(),
                            hour = lubridate::hour(date),
                            minute = lubridate::minute(date)) %>%
