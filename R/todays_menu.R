@@ -19,14 +19,17 @@ html <- rvest::read_html(link)
 cat("Finding The Parlour's current flavors...\n")
 
 # Extract the current flavor offerings
-flavors <- html %>%
-  rvest::html_elements(".flavor-name") %>%
+flavor_elements <- html %>%
+  rvest::html_elements(".flavor")
+
+flavors <- flavor_elements %>%
+  rvest::html_element("h3") %>%
   rvest::html_text() %>%
   stringr::str_squish()
 
 # Extract the current flavor descriptions
-descriptions <- html %>%
-  rvest::html_elements(".flavor-description") %>%
+descriptions <- flavor_elements %>%
+  rvest::html_element("div") %>%
   rvest::html_text() %>%
   stringr::str_squish()
 
